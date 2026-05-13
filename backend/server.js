@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurantRoutes');
+const dishRoutes = require('./routes/dishRoutes');
 
 dotenv.config();
 connectDB();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/restaurants/:restaurantId/dishes', dishRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Cravings API is running 🍽️' });
