@@ -25,11 +25,14 @@ const createRestaurant = async (req, res) => {
 
 const getRestaurants = async (req, res) => {
   try {
-    const { search, cuisine, city } = req.query;
+    const { search, cuisine, city, page = 1, limit = 10 } = req.query;
     let query = {};
 
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
     }
     if (cuisine) {
       query.cuisine = { $regex: cuisine, $options: 'i' };
@@ -38,11 +41,22 @@ const getRestaurants = async (req, res) => {
       query.city = { $regex: city, $options: 'i' };
     }
 
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await Restaurant.countDocuments(query);
+    const totalPages = Math.ceil(total / Number(limit));
+
     const restaurants = await Restaurant.find(query)
       .populate('createdBy', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
 
-    res.json(restaurants);
+    res.json({
+      restaurants,
+      currentPage: Number(page),
+      totalPages,
+      totalRestaurants: total
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
