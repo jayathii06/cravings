@@ -95,5 +95,27 @@ const deleteRestaurant = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const getTrending = async (req, res) => {
+  try {
+    const Review = require('../models/Review');
 
-module.exports = { createRestaurant, getRestaurants, getRestaurantById, deleteRestaurant };
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const trendingDishes = await Review.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      { $group: { _id: '$dish', reviewCount: { $sum: 1 }, avgRating: { $avg: '$rating' } } },
+      { $sort: { reviewCount: -1, avgRating: -1 } },
+      { $limit: 10 },
+      { $lookup: { from: 'dishes', localField: '_id', foreignField: '_id', as: 'dish' } },
+      { $unwind: '$dish' },
+      { $lookup: { from: 'restaurants', localField: 'dish.restaurant', foreignField: '_id', as: 'restaurant' } },
+      { $unwind: '$restaurant' }
+    ]);
+
+    res.json(trendingDishes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+module.exports = { createRestaurant, getRestaurants, getRestaurantById, deleteRestaurant, getTrending };

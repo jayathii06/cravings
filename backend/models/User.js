@@ -22,6 +22,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   }
+  ,
+  bookmarks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Restaurant'
+    }
+  ]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

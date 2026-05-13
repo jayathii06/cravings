@@ -5,9 +5,11 @@ const {
   createRestaurant,
   getRestaurants,
   getRestaurantById,
-  deleteRestaurant
+  deleteRestaurant,
+  getTrending
 } = require('../controllers/restaurantController');
 
+router.get('/trending', getTrending);
 router.get('/', getRestaurants);
 router.get('/:id', getRestaurantById);
 router.post('/', protect, createRestaurant);
