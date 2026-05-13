@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -7,8 +9,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<div>Home Page Coming Soon</div>} />
-          <Route path="/login" element={<div>Login Page Coming Soon</div>} />
-          <Route path="/register" element={<div>Register Page Coming Soon</div>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </Router>
     </AuthProvider>
