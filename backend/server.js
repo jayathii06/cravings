@@ -8,6 +8,7 @@ const dishRoutes = require('./routes/dishRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 connectDB();
@@ -23,6 +24,7 @@ app.use('/api/restaurants/:restaurantId/dishes', dishRoutes);
 app.use('/api/restaurants/:restaurantId/dishes/:dishId/reviews', reviewRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
+app.use('/api', userRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Cravings API is running 🍽️' });

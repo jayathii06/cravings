@@ -77,5 +77,15 @@ const deleteReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const getMyReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({ user: req.user._id })
+      .populate({ path: 'dish', select: 'name restaurant', populate: { path: 'restaurant', select: 'name' } })
+      .sort({ createdAt: -1 });
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-module.exports = { createReview, getReviewsByDish, deleteReview };
+module.exports = { createReview, getReviewsByDish, deleteReview, getMyReviews };

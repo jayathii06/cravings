@@ -16,6 +16,7 @@ const Navbar = () => {
       <div style={styles.links}>
         {user ? (
           <>
+            <Link to="/add-restaurant" style={styles.addBtn}>+ Add Restaurant</Link>
             <Link to="/profile" style={styles.link}>👤 {user.name}</Link>
             <Link to="/bookmarks" style={styles.link}>🔖 Saved</Link>
             <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
@@ -78,7 +79,16 @@ const styles = {
     fontSize: '0.9rem',
     padding: '0.5rem 1.2rem',
     borderRadius: '8px'
-  }
+  },
+  addBtn: {
+  background: 'var(--surface)',
+  color: 'var(--primary)',
+  border: '1.5px solid var(--primary)',
+  padding: '0.45rem 1rem',
+  borderRadius: '8px',
+  fontWeight: '600',
+  fontSize: '0.875rem'
+}
 };
 
 export default Navbar;

@@ -3,7 +3,15 @@ const router = express.Router();
 const { upload, cloudinary } = require('../config/cloudinary');
 const { protect } = require('../middleware/authMiddleware');
 
-router.post('/', protect, upload.single('image'), (req, res) => {
+router.post('/', protect, (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(500).json({ message: err.message });
+    }
+    next();
+  });
+}, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No image uploaded' });
@@ -13,6 +21,7 @@ router.post('/', protect, upload.single('image'), (req, res) => {
       public_id: req.file.filename
     });
   } catch (error) {
+    console.error('Upload error:', error);
     res.status(500).json({ message: error.message });
   }
 });
